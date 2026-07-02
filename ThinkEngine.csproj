@@ -1,4 +1,4 @@
-﻿<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -269,6 +269,11 @@
     <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Planner\Plan.cs" />
     <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Specialitations\ASP\ASPReactiveBrain.cs" />
     <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Specialitations\ASP\ASPExecutor.cs" />
+    <Compile Include="it\unical\mat\embaspTool\embasp\specializations\ltlf\desktop\LTLFControllerService.cs" />
+    <Compile Include="it\unical\mat\embaspTool\embasp\specializations\ltlf\desktop\LTLFControllerHandler.cs" />
+    <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Temporal\TemporalBrain.cs" />
+    <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Temporal\TemporalExecutor.cs" />
+    <Compile Include="it\unical\mat\objectsMapper\Editors\TemporalBrainEditor.cs" />
     <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Planner\Action.cs" />
     <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Brain.cs" />
     <Compile Include="it\unical\mat\objectsMapper\BrainsScripts\Specialitations\ASP\ASPPlannerBrain.cs" />
