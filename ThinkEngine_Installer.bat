@@ -27,9 +27,4 @@ xcopy /f "./bin/Debug/Editor/ThinkEngine.dll.meta" "./ThinkEngine/Assets/ThinkEn
 xcopy /f "./bin/Debug/Editor/SensorTemplate.txt" "./ThinkEngine/Assets/Scripts/" /Y
 xcopy /f "./bin/Debug/Standalone/ThinkEngine.dll.meta" "./ThinkEngine/Assets/ThinkEngineer/ThinkEngine/Plugins/" /Y
 
-echo Creating Temporal subdirectories...
-if not exist ".\ThinkEngine\Assets\ThinkEngineer\ThinkEngine\Temporal\Config" mkdir ".\ThinkEngine\Assets\ThinkEngineer\ThinkEngine\Temporal\Config"
-if not exist ".\ThinkEngine\Assets\ThinkEngineer\ThinkEngine\Temporal\Automata" mkdir ".\ThinkEngine\Assets\ThinkEngineer\ThinkEngine\Temporal\Automata"
-if not exist ".\ThinkEngine\Assets\ThinkEngineer\ThinkEngine\Temporal\ASP" mkdir ".\ThinkEngine\Assets\ThinkEngineer\ThinkEngine\Temporal\ASP"
-
 7z a  ThinkEnginePlugin.zip .\ThinkEngine\* 

@@ -83,7 +83,7 @@ namespace ThinkEngine
         protected override void Start()
         {
             // Configure AIFilesPath to point to the Temporal/ASP directory
-            AIFilesPath = System.IO.Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal", "ASP");
+            AIFilesPath = System.IO.Path.Combine(Utility.StreamingAssetsContent, "Temporal", "ASP");
             
             // Automatically initialize and populate AIFilesPrefix with behaviourName
             if (ChosenSensorConfigurations == null)
@@ -110,8 +110,7 @@ namespace ThinkEngine
             }
             else if (Application.isPlaying)
             {
-                // Verify if the LTLf automaton file exists, if not, compile it.
-                string automataPath = System.IO.Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal", "Automata", behaviourName + ".ltlf");
+                string automataPath = System.IO.Path.Combine(Utility.StreamingAssetsContent, "Temporal", "Automata", behaviourName + ".ltlf");
                 if (!System.IO.File.Exists(automataPath))
                 {
                     Debug.LogWarning($"LTLf Automata for '{behaviourName}' not found at {automataPath}. Attempting to build from Config...");
@@ -141,8 +140,7 @@ namespace ThinkEngine
             {
                 templateName = gameObject.name + "TemporalTemplate";
             }
-            
-            string temporalFolder = System.IO.Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal");
+            string temporalFolder = System.IO.Path.Combine(Utility.StreamingAssetsContent, "Temporal");
             string aspFolder = System.IO.Path.Combine(temporalFolder, "ASP");
             
             if (!System.IO.Directory.Exists(aspFolder))

@@ -160,7 +160,7 @@ namespace ThinkEngine.LTLF
                 return false;
             }
 
-            string temporalFolder = Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal");
+            string temporalFolder = Path.Combine(Utility.StreamingAssetsContent, "Temporal");
             string configPath = Path.Combine(temporalFolder, "Config", behaviourName + ".txt");
             
             if (!File.Exists(configPath))

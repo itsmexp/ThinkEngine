@@ -41,7 +41,7 @@ namespace ThinkEngine.Editors
             }
 
             string behaviourName = myScript.behaviourName;
-            string temporalFolder = Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal");
+            string temporalFolder = Path.Combine(Utility.StreamingAssetsContent, "Temporal");
             string configPath = Path.Combine(temporalFolder, "Config", behaviourName + ".txt");
             string automataPath = Path.Combine(temporalFolder, "Automata", behaviourName + ".ltlf");
 
@@ -155,7 +155,7 @@ namespace ThinkEngine.Editors
             }
             if (GUILayout.Button("Show in Explorer"))
             {
-                string automataDir = Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal", "Automata");
+                string automataDir = Path.Combine(Utility.StreamingAssetsContent, "Temporal", "Automata");
                 if (!Directory.Exists(automataDir)) Directory.CreateDirectory(automataDir);
                 EditorUtility.OpenWithDefaultApp(automataDir);
             }
@@ -168,7 +168,7 @@ namespace ThinkEngine.Editors
             }
             if (GUILayout.Button("Show in Explorer"))
             {
-                string aspDir = Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal", "ASP");
+                string aspDir = Path.Combine(Utility.StreamingAssetsContent, "Temporal", "ASP");
                 if (!Directory.Exists(aspDir)) Directory.CreateDirectory(aspDir);
                 EditorUtility.OpenWithDefaultApp(aspDir);
             }
