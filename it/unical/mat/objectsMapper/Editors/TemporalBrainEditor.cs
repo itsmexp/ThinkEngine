@@ -24,7 +24,7 @@ namespace ThinkEngine.Editors
             myScript = target as TemporalBrain;
             base.OnEnable();
             if (!ExcludedProperties.Contains("behaviourName")) ExcludedProperties.Add("behaviourName");
-            if (!ExcludedProperties.Contains("aspTemplate")) ExcludedProperties.Add("aspTemplate");
+            if (!ExcludedProperties.Contains("aspEncoding")) ExcludedProperties.Add("aspEncoding");
             if (!ExcludedProperties.Contains("actionMappings")) ExcludedProperties.Add("actionMappings");
             if (!ExcludedProperties.Contains("debug")) ExcludedProperties.Add("debug");
             if (!ExcludedProperties.Contains("useInterval")) ExcludedProperties.Add("useInterval");
@@ -76,11 +76,11 @@ namespace ThinkEngine.Editors
             
             SerializedProperty debugProp = serializedObject.FindProperty("debug");
             SerializedProperty behaviourNameProp = serializedObject.FindProperty("behaviourName");
-            SerializedProperty aspTemplateProp = serializedObject.FindProperty("aspTemplate");
+            SerializedProperty aspEncodingProp = serializedObject.FindProperty("aspEncoding");
 
             EditorGUILayout.PropertyField(debugProp);
             EditorGUILayout.PropertyField(behaviourNameProp, new GUIContent("Behaviour Name"));
-            EditorGUILayout.PropertyField(aspTemplateProp, new GUIContent("ASP Template"));
+            EditorGUILayout.PropertyField(aspEncodingProp, new GUIContent("ASP Encoding"));
             
             EditorGUILayout.Space();
 

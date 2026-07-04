@@ -33,8 +33,8 @@ namespace ThinkEngine
         [Tooltip("The name of the LTLf behavior/automaton config.")]
         public string behaviourName;
         
-        [Tooltip("Optional custom ASP template name.")]
-        public string aspTemplate;
+        [Tooltip("Optional custom ASP encoding name.")]
+        public string aspEncoding;
         
         [Tooltip("Mappings from LTLf action outputs to Unity events.")]
         public List<ActionMapping> actionMappings = new List<ActionMapping>();
@@ -98,9 +98,10 @@ namespace ThinkEngine
             {
                 AIFilesPrefix = new List<string>();
             }
-            if (!string.IsNullOrEmpty(behaviourName) && !AIFilesPrefix.Contains(behaviourName))
+            string encodingName = string.IsNullOrEmpty(aspEncoding) ? behaviourName : aspEncoding;
+            if (!string.IsNullOrEmpty(encodingName) && !AIFilesPrefix.Contains(encodingName))
             {
-                AIFilesPrefix.Add(behaviourName);
+                AIFilesPrefix.Add(encodingName);
             }
 
             if (string.IsNullOrEmpty(behaviourName))
@@ -135,7 +136,7 @@ namespace ThinkEngine
         /// </summary>
         internal override void GenerateFile()
         {
-            string templateName = string.IsNullOrEmpty(aspTemplate) ? behaviourName : aspTemplate;
+            string templateName = string.IsNullOrEmpty(aspEncoding) ? behaviourName : aspEncoding;
             if (string.IsNullOrEmpty(templateName))
             {
                 templateName = gameObject.name + "TemporalTemplate";
