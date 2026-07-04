@@ -1,4 +1,4 @@
-﻿using it.unical.mat.embasp.@base;
+using it.unical.mat.embasp.@base;
 using it.unical.mat.embasp.languages.asp;
 using it.unical.mat.embasp.platforms.desktop;
 using System;
@@ -45,7 +45,7 @@ namespace ThinkEngine.it.unical.mat.objectsMapper.BrainsScripts
                 executor.solverDone = true;
             }
         }
-        int lastSensorIteration = -1;
+        internal int lastSensorIteration = -1;
 
         protected Brain brain;
         protected string factsPath;
@@ -122,7 +122,7 @@ namespace ThinkEngine.it.unical.mat.objectsMapper.BrainsScripts
 
             encoding = GetProgramInstance();
             List<string> filesToCheck = new List<string>();
-            LookForFiles(Utility.StreamingAssetsContent, ref filesToCheck);
+            LookForFiles(brain.AIFilesPath, ref filesToCheck);
             foreach (string fileName in filesToCheck)
             {
                 TryToAddEncoding(fileName);

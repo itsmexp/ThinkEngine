@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using System.IO;
-using System.Diagnostics;
-using Debug = UnityEngine.Debug;
 
 namespace ThinkEngine.Editors
 {
@@ -29,33 +27,84 @@ namespace ThinkEngine.Editors
             if (!ExcludedProperties.Contains("aspTemplate")) ExcludedProperties.Add("aspTemplate");
             if (!ExcludedProperties.Contains("actionMappings")) ExcludedProperties.Add("actionMappings");
             if (!ExcludedProperties.Contains("debug")) ExcludedProperties.Add("debug");
+            if (!ExcludedProperties.Contains("useInterval")) ExcludedProperties.Add("useInterval");
+            if (!ExcludedProperties.Contains("executionInterval")) ExcludedProperties.Add("executionInterval");
+            if (!ExcludedProperties.Contains("availableActions")) ExcludedProperties.Add("availableActions");
         }
         
-        private bool showAdvanced = false;
-        private List<string> cachedActions = new List<string>();
+        private void LoadBehavior()
+        {
+            if (myScript == null || string.IsNullOrEmpty(myScript.behaviourName))
+            {
+                EditorUtility.DisplayDialog("Error", "Please specify a Behaviour Name.", "OK");
+                return;
+            }
+
+            string behaviourName = myScript.behaviourName;
+            string temporalFolder = Path.Combine(Utility.ThinkEngineBaseFolder, "Temporal");
+            string configPath = Path.Combine(temporalFolder, "Config", behaviourName + ".txt");
+            string automataPath = Path.Combine(temporalFolder, "Automata", behaviourName + ".ltlf");
+
+            if (File.Exists(automataPath))
+            {
+                myScript.availableActions = ThinkEngine.LTLF.LTLFControllerHandler.GetActions(behaviourName);
+                EditorUtility.SetDirty(myScript);
+                serializedObject.Update();
+                EditorUtility.DisplayDialog("Success", "Behavior loaded successfully.", "OK");
+            }
+            else if (File.Exists(configPath))
+            {
+                EditorUtility.DisplayDialog("Warning", "L'automa LTLf sottostante non è stato ancora generato. Clicca su 'Generate LTLf Automata'.", "OK");
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Error", "La behaviour specificata non esiste.", "OK");
+            }
+        }
 
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
 
+            GUI.enabled = false;
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("m_Script"));
+            GUI.enabled = true;
+
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("enableBrain"));
+
             EditorGUILayout.Space();
             
-            myScript.debug = EditorGUILayout.Toggle("Debug", myScript.debug);
-            myScript.behaviourName = EditorGUILayout.TextField("Behaviour Name", myScript.behaviourName);
-            myScript.aspTemplate = EditorGUILayout.TextField("ASP Template", myScript.aspTemplate);
+            SerializedProperty debugProp = serializedObject.FindProperty("debug");
+            SerializedProperty behaviourNameProp = serializedObject.FindProperty("behaviourName");
+            SerializedProperty aspTemplateProp = serializedObject.FindProperty("aspTemplate");
+
+            EditorGUILayout.PropertyField(debugProp);
+            EditorGUILayout.PropertyField(behaviourNameProp, new GUIContent("Behaviour Name"));
+            EditorGUILayout.PropertyField(aspTemplateProp, new GUIContent("ASP Template"));
             
             EditorGUILayout.Space();
-            
+
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("Action Mappings", EditorStyles.boldLabel);
-            if (GUILayout.Button("Load Actions", GUILayout.Width(120)))
+            if (GUILayout.Button("Load Behavior", GUILayout.Width(150), GUILayout.Height(25)))
             {
-                cachedActions = string.IsNullOrEmpty(myScript.behaviourName) ? new List<string>() : ThinkEngine.LTLF.LTLFControllerHandler.GetActions(myScript.behaviourName);
+                LoadBehavior();
             }
             EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.Space();
             
-            var actions = new List<string>(cachedActions);
-            if (actions.Count == 0) actions.Add("N/A (Build or set behaviour)");
+            EditorGUILayout.LabelField("Temporal Trigger Settings", EditorStyles.boldLabel);
+            EditorGUILayout.BeginVertical("box");
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("useInterval"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("executionInterval"));
+            EditorGUILayout.EndVertical();
+
+            EditorGUILayout.Space();
+
+            EditorGUILayout.LabelField("Action Mappings", EditorStyles.boldLabel);
+            
+            var actions = new List<string>(myScript.availableActions);
+            if (actions.Count == 0) actions.Add("N/A (Load behavior)");
 
             SerializedProperty mappingsProp = serializedObject.FindProperty("actionMappings");
             
@@ -70,7 +119,7 @@ namespace ThinkEngine.Editors
                 
                 int selectedIndex = Mathf.Max(0, actions.IndexOf(actionNameProp.stringValue));
                 selectedIndex = EditorGUILayout.Popup("Action", selectedIndex, actions.ToArray());
-                if (actions.Count > 0 && selectedIndex >= 0 && selectedIndex < actions.Count && actions[selectedIndex] != "N/A (Build or set behaviour)")
+                if (actions.Count > 0 && selectedIndex >= 0 && selectedIndex < actions.Count && actions[selectedIndex] != "N/A (Load behavior)")
                 {
                     actionNameProp.stringValue = actions[selectedIndex];
                 }
@@ -124,28 +173,6 @@ namespace ThinkEngine.Editors
                 EditorUtility.OpenWithDefaultApp(aspDir);
             }
             EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.Space();
-
-            showAdvanced = EditorGUILayout.Foldout(showAdvanced, "Advanced Brain Settings", true, EditorStyles.foldoutHeader);
-            if (showAdvanced)
-            {
-                EditorGUILayout.BeginVertical("box");
-                
-                DrawPropertiesExcluding(serializedObject, ExcludedProperties.ToArray());
-                
-                EditorGUILayout.BeginHorizontal();
-                Target.maintainInputFile = EditorGUILayout.Toggle("Maintain input file", Target.maintainInputFile);
-                if (GUILayout.Button("Open input folder"))
-                {
-                    EditorUtility.OpenWithDefaultApp(Path.Combine(Path.GetTempPath(),"ThinkEngineFacts"));
-                }
-                EditorGUILayout.EndHorizontal();
-
-                ChooseReasonerTriggerMethod();
-                
-                EditorGUILayout.EndVertical();
-            }
 
             serializedObject.ApplyModifiedProperties();
             SavingInBrain();

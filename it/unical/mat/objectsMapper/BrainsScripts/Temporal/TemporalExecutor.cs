@@ -37,6 +37,11 @@ namespace ThinkEngine.it.unical.mat.objectsMapper.BrainsScripts
             
             string sensorsString = string.Join(" ", activeSensors);
             
+            if (tBrain.debug)
+            {
+                Debug.Log($"{tBrain.executorName} - Active LTLf Sensors: [{sensorsString}]");
+            }
+            
             string ltlfExePath = LTLFControllerHandler.ExecutablePath;
             if (!File.Exists(ltlfExePath))
             {
@@ -48,21 +53,37 @@ namespace ThinkEngine.it.unical.mat.objectsMapper.BrainsScripts
             
             string output = LTLFControllerService.Instance.Evaluate(behaviour, uuid, sensorsString);
             
+            if (tBrain.debug)
+            {
+                Debug.Log($"{tBrain.executorName} - LTLf Evaluation Output: {output}");
+            }
+            
             if (!string.IsNullOrEmpty(output))
             {
                 string[] outParts = output.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (outParts.Length > 0 && outParts[0] == uuid)
                 {
+                    HashSet<string> trueActions = new HashSet<string>();
+                    
+                    // Parse actions returned by the LTLf controller
                     for (int i = 1; i < outParts.Length; i++)
                     {
                         string actionToken = outParts[i];
-                        bool value = true;
-                        string actionName = actionToken;
-                        
-                        if (actionToken.StartsWith("!"))
+                        if (!actionToken.StartsWith("!"))
                         {
-                            value = false;
-                            actionName = actionToken.Substring(1);
+                            trueActions.Add(actionToken);
+                        }
+                    }
+                    
+                    // Notify all mapped actions based on whether they are in the trueActions set
+                    foreach (var mapping in tBrain.actionMappings)
+                    {
+                        string actionName = mapping.actionName;
+                        bool value = trueActions.Contains(actionName);
+                        
+                        if (tBrain.debug)
+                        {
+                            Debug.Log($"{tBrain.executorName} - Enqueuing action notification: '{actionName}' = {value}");
                         }
                         
                         tBrain.NotifyAction(actionName, value);
@@ -78,7 +99,7 @@ namespace ThinkEngine.it.unical.mat.objectsMapper.BrainsScripts
 
         protected override void SpecificFactsWriting(Brain brain, StreamWriter fs)
         {
-            fs.WriteLine($"brain({brain.gameObject.GetInstanceID()}).");
+            // The base executor already writes currentBrainID(ID).
         }
 
         protected override List<OptionDescriptor> SpecificOptions()

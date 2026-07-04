@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -145,9 +145,13 @@ namespace ThinkEngine
             {
                 return;
             }
+            if (!Directory.Exists(AIFilesPath))
+            {
+                return;
+            }
             _fileExtension = "";
-            // Iterate over all the files in the StreamingAssetsContent folder (and subfolders)
-            foreach (string filePath in Directory.GetFiles(Utility.StreamingAssetsContent, "*.*", SearchOption.AllDirectories))
+            // Iterate over all the files in the AIFilesPath folder (and subfolders)
+            foreach (string filePath in Directory.GetFiles(AIFilesPath, "*.*", SearchOption.AllDirectories))
             {
                 string fileName = Path.GetFileName(filePath);
                 foreach (string prefix in AIFilesPrefix)
