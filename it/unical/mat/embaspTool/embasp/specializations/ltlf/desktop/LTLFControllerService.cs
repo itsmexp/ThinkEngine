@@ -49,6 +49,10 @@ namespace ThinkEngine.LTLF
                 process.StartInfo.RedirectStandardOutput = true;
                 process.StartInfo.RedirectStandardError = true;
                 
+                string temporalFolder = Path.Combine(Utility.StreamingAssetsContent, "Temporal");
+                string automataDir = Path.Combine(temporalFolder, "Automata");
+                process.StartInfo.EnvironmentVariables["LTLF_STORAGE_DIR"] = automataDir;
+                
                 try
                 {
                     process.Start();

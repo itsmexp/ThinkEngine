@@ -53,6 +53,11 @@ namespace ThinkEngine.LTLF
                     helpProcess.StartInfo.UseShellExecute = false;
                     helpProcess.StartInfo.RedirectStandardOutput = true;
                     helpProcess.StartInfo.CreateNoWindow = true;
+                    
+                    string temporalFolder = Path.Combine(Utility.StreamingAssetsContent, "Temporal");
+                    string automataDir = Path.Combine(temporalFolder, "Automata");
+                    helpProcess.StartInfo.EnvironmentVariables["LTLF_STORAGE_DIR"] = automataDir;
+
                     helpProcess.Start();
                     
                     string output = helpProcess.StandardOutput.ReadToEnd();
@@ -95,6 +100,11 @@ namespace ThinkEngine.LTLF
                     helpProcess.StartInfo.UseShellExecute = false;
                     helpProcess.StartInfo.RedirectStandardOutput = true;
                     helpProcess.StartInfo.CreateNoWindow = true;
+                    
+                    string temporalFolder = Path.Combine(Utility.StreamingAssetsContent, "Temporal");
+                    string automataDir = Path.Combine(temporalFolder, "Automata");
+                    helpProcess.StartInfo.EnvironmentVariables["LTLF_STORAGE_DIR"] = automataDir;
+
                     helpProcess.Start();
                     
                     string output = helpProcess.StandardOutput.ReadToEnd();
@@ -177,18 +187,7 @@ namespace ThinkEngine.LTLF
 
             try
             {
-                // First configure the storage directory
-                using (Process configProcess = new Process())
-                {
-                    configProcess.StartInfo.FileName = exePath;
-                    configProcess.StartInfo.Arguments = $"config --storage-dir \"{automataDir}\"";
-                    configProcess.StartInfo.UseShellExecute = false;
-                    configProcess.StartInfo.CreateNoWindow = true;
-                    configProcess.Start();
-                    configProcess.WaitForExit();
-                }
-                
-                // Then generate the automata
+                // Generate the automata
                 using (Process genProcess = new Process())
                 {
                     genProcess.StartInfo.FileName = exePath;
@@ -197,6 +196,7 @@ namespace ThinkEngine.LTLF
                     genProcess.StartInfo.RedirectStandardOutput = true;
                     genProcess.StartInfo.RedirectStandardError = true;
                     genProcess.StartInfo.CreateNoWindow = true;
+                    genProcess.StartInfo.EnvironmentVariables["LTLF_STORAGE_DIR"] = automataDir;
                     genProcess.Start();
                     
                     string error = genProcess.StandardError.ReadToEnd();
