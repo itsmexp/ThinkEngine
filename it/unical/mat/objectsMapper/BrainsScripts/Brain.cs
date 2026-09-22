@@ -120,6 +120,11 @@ namespace ThinkEngine
         }
         void Awake()
         {
+            if (AIFilesPrefix == null)
+            {
+                AIFilesPrefix = new List<string>();
+                AIFilesPrefix.Add(gameObject.name + "_");
+            }
             AIFilesPath = Utility.StreamingAssetsContent;
         }
 
@@ -176,6 +181,7 @@ namespace ThinkEngine
 
             if (FileExtension.Equals(""))
             {
+                Debug.LogError("AI files not found. Check for AI Files Prefix matching your AI files name.");
                 _fileExtension = null;
             }
         }
